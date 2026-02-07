@@ -74,8 +74,7 @@ def organize_pdfs(
         task = progress.add_task("Organizando PDFs", total=len(pdfs))
         for pdf in pdfs:
             extracted = extract_pdf_text(pdf, max_pages=max_pages)
-            combo_text = f"{extracted.title}\n{extracted.text}"
-            cls = classify_text(combo_text, cfg.categories)
+            cls = classify_text(extracted.text, cfg.categories, title=extracted.title, toc=extracted.toc)
 
             cat_dir = output_dir / cls.category
             dest = safe_destination_path(cat_dir, pdf.name)

@@ -12,10 +12,27 @@ from pdfminer.high_level import extract_text as pdfminer_extract_text
 class ExtractedText:
     title: str
     text: str
+    toc: str
 
 
 def _safe_str(x: Optional[str]) -> str:
     return (x or "").strip()
+
+
+def _flatten_outline(outline, titles: list[str]) -> None:
+    if outline is None:
+        return
+    if isinstance(outline, list):
+        for item in outline:
+            _flatten_outline(item, titles)
+        return
+    title = ""
+    if hasattr(outline, "title"):
+        title = _safe_str(getattr(outline, "title", None))
+    elif isinstance(outline, str):
+        title = _safe_str(outline)
+    if title:
+        titles.append(title)
 
 
 def extract_pdf_text(path: Path, max_pages: int = 3) -> ExtractedText:
@@ -24,6 +41,7 @@ def extract_pdf_text(path: Path, max_pages: int = 3) -> ExtractedText:
     """
     title = ""
     text = ""
+    toc = ""
 
     # 1) Try pypdf
     try:
@@ -31,6 +49,13 @@ def extract_pdf_text(path: Path, max_pages: int = 3) -> ExtractedText:
         meta = getattr(reader, "metadata", None)
         if meta:
             title = _safe_str(getattr(meta, "title", None)) or _safe_str(meta.get("/Title") if isinstance(meta, dict) else None)
+
+        titles: list[str] = []
+        outline = getattr(reader, "outline", None)
+        if outline is None:
+            outline = getattr(reader, "outlines", None)
+        _flatten_outline(outline, titles)
+        toc = "\n".join(titles).strip()
 
         pages = reader.pages[:max_pages]
         chunks = []
@@ -59,4 +84,7 @@ def extract_pdf_text(path: Path, max_pages: int = 3) -> ExtractedText:
     if len(text) > 200_000:
         text = text[:200_000]
 
-    return ExtractedText(title=title, text=text)
+    if len(toc) > 50_000:
+        toc = toc[:50_000]
+
+    return ExtractedText(title=title, text=text, toc=toc)
