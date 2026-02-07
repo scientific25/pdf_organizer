@@ -38,6 +38,11 @@ pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --mode move
 pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --dry-run
 ```
 
+### Classificar só pelo nome do arquivo (sem abrir PDFs)
+```bash
+pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --classify-by filename
+```
+
 ### Customizar categorias/palavras-chave
 Edite `categories.yaml` ou use outro arquivo:
 ```bash
@@ -47,7 +52,7 @@ pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --config "/camin
 ## Saídas
 - Pastas por categoria em `OUTPUT_DIR/<Categoria>/`
 - Relatório `catalogo.csv` no `OUTPUT_DIR/` com:
-  - original_path, new_path, category, confidence, matched_keywords, title
+  - original_path, source_folder, new_path, category, confidence, matched_keywords, title
 
 ## Observações importantes
 - PDF **escaneado** (sem texto) pode cair em categoria com baixa confiança ou "Outros".

@@ -22,6 +22,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--config", default="categories.yaml", help="Arquivo YAML de categorias/palavras-chave")
     p.add_argument("--dry-run", action="store_true", help="Simula sem copiar/mover arquivos")
     p.add_argument("--max-pages", type=int, default=3, help="Páginas iniciais usadas na classificação (padrão=3)")
+    p.add_argument(
+        "--classify-by",
+        choices=["content", "filename"],
+        default="content",
+        help="Classificar pelo conteúdo (padrão) ou pelo nome do arquivo",
+    )
     return p
 
 
@@ -40,7 +46,10 @@ def main() -> None:
     console.print(f"[bold]Entrada:[/bold] {input_dir}")
     console.print(f"[bold]Saída:[/bold] {output_dir}")
     console.print(f"[bold]Config:[/bold] {config_path}")
-    console.print(f"[bold]Modo:[/bold] {args.mode} | [bold]Dry-run:[/bold] {args.dry_run}\n")
+    console.print(
+        f"[bold]Modo:[/bold] {args.mode} | [bold]Dry-run:[/bold] {args.dry_run} | "
+        f"[bold]Classificar por:[/bold] {args.classify_by}\n"
+    )
 
     results = organize_pdfs(
         input_dir=input_dir,
@@ -49,6 +58,7 @@ def main() -> None:
         mode=args.mode,
         dry_run=args.dry_run,
         max_pages=args.max_pages,
+        classify_by=args.classify_by,
     )
 
     csv_path = write_catalog_csv(output_dir, results)
