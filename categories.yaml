@@ -1,0 +1,127 @@
+# Categorias e palavras-chave (minúsculas). Você pode editar livremente.
+# Dica: use termos em PT + EN (muitos livros são mistos).
+categories:
+  Genética:
+    - genética
+    - genoma
+    - genômica
+    - dna
+    - rna
+    - hereditariedade
+    - mendel
+    - mutação
+    - cromossomo
+    - epigenética
+    - variant
+    - polymorphism
+  Bioquímica:
+    - bioquímica
+    - metabolismo
+    - enzima
+    - proteínas
+    - proteína
+    - aminoácido
+    - glicólise
+    - krebs
+    - atp
+    - lipídeo
+    - carbohydrate
+    - enzyme
+  Biologia Molecular:
+    - biologia molecular
+    - transcrição
+    - tradução
+    - replicação
+    - expressão gênica
+    - expressão génica
+    - operon
+    - plasmídeo
+    - clonagem
+    - crispr
+    - mrna
+  Bioinformática:
+    - bioinformática
+    - bioinformatics
+    - alinhamento
+    - blast
+    - fasta
+    - fastq
+    - sequenciamento
+    - ngs
+    - rna-seq
+    - genomics
+    - transcriptomics
+    - proteomics
+  Estatística:
+    - estatística
+    - statistics
+    - probabilidade
+    - regression
+    - regressão
+    - bayes
+    - anova
+    - p-valor
+    - p value
+    - intervalo de confiança
+    - hypothesis
+  Programação:
+    - python
+    - r language
+    - rstudio
+    - programação
+    - algoritmo
+    - machine learning
+    - aprendizado de máquina
+    - deep learning
+    - data science
+    - pandas
+    - numpy
+  Farmácia Clínica:
+    - farmácia clínica
+    - farmacologia
+    - farmacoterapia
+    - drug
+    - medicamento
+    - prescrição
+    - interação medicamentosa
+    - posologia
+    - efeitos adversos
+    - clinical pharmacy
+  Gestão:
+    - gestão
+    - administração
+    - indicadores
+    - metas
+    - estratégia
+    - processos
+    - mba
+    - gestão farmacêutica
+    - liderança
+    - qualidade
+  Anatomia & Fisiologia:
+    - anatomia
+    - fisiologia
+    - histologia
+    - sistema nervoso
+    - cardiovascular
+    - endocrino
+    - homeostase
+  Microbiologia:
+    - microbiologia
+    - bactéria
+    - vírus
+    - fungo
+    - parasita
+    - antibiograma
+    - antimicrobial
+    - virology
+  Imunologia:
+    - imunologia
+    - immunology
+    - anticorpo
+    - cytokine
+    - linfócito
+    - antigen
+    - vacina
+  Outros:
+    - ""  # fallback
