@@ -13,6 +13,8 @@ dependencies = [
 
 [project.scripts]
 pdf-organizer = "pdf_organizer.cli:main"
+sift-cdkn2a = "pdf_organizer.sift_runner:main"
+compare-sift-alphamissense = "pdf_organizer.compare_scores:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
