@@ -9,10 +9,13 @@ dependencies = [
   "pdfminer.six>=20231228",
   "PyYAML>=6.0.1",
   "rich>=13.0.0",
+  "openpyxl>=3.1.0",
+  "playwright>=1.51.0",
 ]
 
 [project.scripts]
 pdf-organizer = "pdf_organizer.cli:main"
+ms-form-bot = "pdf_organizer.ms_forms_bot:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

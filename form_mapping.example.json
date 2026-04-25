@@ -1,0 +1,16 @@
+{
+  "columns": [
+    {"question": "Pergunta 1", "type": "text"},
+    {"question": "Pergunta 2", "type": "radio"},
+    {"question": "Pergunta 3", "type": "checkbox", "separator": ";"},
+    {"question": "Pergunta 4", "type": "dropdown"},
+    {"question": "Pergunta 5", "type": "text"},
+    {"question": "Pergunta 6", "type": "text"},
+    {"question": "Pergunta 7", "type": "radio"},
+    {"question": "Pergunta 8", "type": "text"},
+    {"question": "Pergunta 9", "type": "text"},
+    {"question": "Pergunta 10", "type": "radio"},
+    {"question": "Pergunta 11", "type": "checkbox", "separator": ";"},
+    {"question": "Pergunta 12", "type": "text"}
+  ]
+}

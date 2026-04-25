@@ -58,3 +58,54 @@ pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --config "/camin
 - PDF **escaneado** (sem texto) pode cair em categoria com baixa confiança ou "Outros".
 - O classificador do MVP é baseado em **palavras-chave** (rápido e transparente).
   Depois você pode evoluir para embeddings/LLM se quiser.
+
+## Automação de Microsoft Forms (Windows) — passo a passo
+
+### Arquivos já prontos
+- `respostas_modelo_60_linhas.csv`: tabela modelo com 12 colunas e 60 linhas para você preencher.
+- `form_mapping.example.json`: exemplo de mapeamento entre colunas e perguntas.
+
+### 1) Instale o programa
+No Windows (PowerShell):
+```powershell
+cd C:\caminho\para\pdf_organizer
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -U pip
+pip install -e .
+playwright install chromium
+```
+
+### 2) Gere um mapeamento inicial automaticamente
+Esse comando abre o formulário e tenta detectar os títulos das perguntas, criando um JSON inicial:
+```powershell
+ms-form-bot \
+  --form-url "https://forms.cloud.microsoft/pages/responsepage.aspx?id=..." \
+  --init-mapping "C:\dados\form_mapping.json"
+```
+
+### 3) Ajuste manualmente o `form_mapping.json`
+- Revise cada item `question` para corresponder exatamente ao título da pergunta no formulário.
+- Defina o tipo correto: `text`, `radio`, `checkbox` ou `dropdown`.
+- Para `checkbox`, pode usar `separator` (`;` por padrão).
+
+### 4) Preencha sua planilha com as 60 respostas
+Use `respostas_modelo_60_linhas.csv` como base:
+- 12 colunas (cada coluna = 1 pergunta)
+- 60 linhas (cada linha = 1 submissão completa)
+
+### 5) Execute o envio automático
+```powershell
+ms-form-bot \
+  --form-url "https://forms.cloud.microsoft/pages/responsepage.aspx?id=..." \
+  --sheet "C:\dados\respostas_modelo_60_linhas.csv" \
+  --mapping "C:\dados\form_mapping.json" \
+  --limit 60 \
+  --skip-header
+```
+
+### Dicas úteis
+- Remova `--headless` para ver o navegador em ação.
+- Use `--submit-label "Enviar"` se o botão final não for detectado automaticamente.
+- Cada linha da planilha gera **uma submissão completa** do formulário.
+- Linhas totalmente vazias são ignoradas.
