@@ -1,0 +1,4 @@
+variant_id,am_class,am_score
+v1,pathogenic,0.94
+v2,benign,0.11
+v3,likely_pathogenic,0.81
