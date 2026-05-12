@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 pdf-organizer = "pdf_organizer.cli:main"
+class-scheduler = "pdf_organizer.cli_scheduler:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
