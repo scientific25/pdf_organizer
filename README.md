@@ -58,3 +58,60 @@ pdf-organizer --input "/caminho/pdfs" --output "/caminho/saida" --config "/camin
 - PDF **escaneado** (sem texto) pode cair em categoria com baixa confiança ou "Outros".
 - O classificador do MVP é baseado em **palavras-chave** (rápido e transparente).
   Depois você pode evoluir para embeddings/LLM se quiser.
+
+---
+
+## Gerador de Horários de Aula (Faculdade - Noturno)
+
+Também há uma CLI para montar grade automaticamente minimizando choques de horário de professor/turma e reduzindo dias de ida do professor.
+
+### Instalação
+Após `pip install -e .`, use:
+
+```bash
+class-scheduler --professors-csv professores.csv --disciplines-csv disciplinas.csv --output grade.csv
+```
+
+### Regras usadas
+- Período noturno fixo: `18:30-19:20`, `19:20-20:10`, `20:10-21:00`, `21:00-21:50`.
+- Dias: segunda a sexta (`Seg` a `Sex`).
+- Evita choque de professor no mesmo dia/horário.
+- Evita choque de turma (curso+turma) no mesmo dia/horário.
+- Prefere dias de preferência do professor.
+- Tenta concentrar aulas no menor número de dias por professor.
+
+### Formato CSV ideal
+
+#### `professores.csv`
+Colunas obrigatórias:
+- `professor`: nome do professor
+- `preferred_days`: dias preferidos separados por `;` ou `,` (ex.: `Seg;Ter`)
+
+Exemplo:
+```csv
+professor,preferred_days
+Ana,Seg;Ter
+Bruno,Qua;Qui
+Carlos,Seg
+```
+
+#### `disciplinas.csv`
+Colunas obrigatórias:
+- `discipline`: nome da disciplina
+- `course`: curso
+- `turma`: turma
+- `weekly_classes`: quantidade de aulas semanais
+- `professor`: professor responsável
+
+Exemplo:
+```csv
+discipline,course,turma,weekly_classes,professor
+Calculo I,Engenharia,1A,2,Ana
+Fisica I,Engenharia,1A,2,Bruno
+Banco de Dados,ADS,2A,2,Carlos
+Redes,ADS,3A,2,Carlos
+```
+
+### Saída
+Arquivo `grade.csv` com colunas:
+- `day`, `slot`, `course`, `turma`, `discipline`, `professor`.
