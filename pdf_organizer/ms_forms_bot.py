@@ -97,10 +97,7 @@ def _read_csv(path: Path) -> list[list[str]]:
 
 
 def _read_xlsx(path: Path) -> list[list[str]]:
-    try:
-        from openpyxl import load_workbook
-    except ModuleNotFoundError as exc:
-        raise RuntimeError("Para ler arquivos .xlsx, instale a dependência openpyxl.") from exc
+    from openpyxl import load_workbook
 
     wb = load_workbook(path, data_only=True, read_only=True)
     ws = wb.active
@@ -209,11 +206,17 @@ def detect_form_questions(page: "Page") -> list[str]:
     return found
 
 
-def create_mapping_template(form_url: str, output_path: Path, headless: bool = False, limit: int = 12) -> None:
+def create_mapping_template(
+    form_url: str,
+    output_path: Path,
+    headless: bool = False,
+    limit: int = 12,
+    colab: bool = False,
+) -> None:
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=headless)
+        browser = _launch_browser(playwright, headless=headless, colab=colab)
         try:
             page = browser.new_page()
             page.goto(form_url, wait_until="networkidle")
@@ -232,6 +235,13 @@ def create_mapping_template(form_url: str, output_path: Path, headless: bool = F
         ]
     }
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _launch_browser(playwright, headless: bool, colab: bool):
+    launch_args: list[str] = []
+    if colab:
+        launch_args = ["--no-sandbox", "--disable-dev-shm-usage"]
+    return playwright.chromium.launch(headless=headless, args=launch_args)
 
 
 def submit_rows(browser: "Browser", config: BotConfig, rows: list[list[str]], delay_ms: int = 700) -> None:
@@ -260,6 +270,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--delay-ms", type=int, default=700, help="Espera entre envios em milissegundos")
     parser.add_argument("--submit-label", default=None, help="Texto exato/parcial do botão de envio")
     parser.add_argument("--headless", action="store_true", help="Executa sem abrir janela do navegador")
+    parser.add_argument("--colab", action="store_true", help="Ativa flags de execução compatíveis com Google Colab")
     parser.add_argument(
         "--skip-header",
         action="store_true",
@@ -277,7 +288,7 @@ def main() -> None:
 
     if args.init_mapping:
         output = Path(args.init_mapping).expanduser().resolve()
-        create_mapping_template(args.form_url, output, headless=args.headless)
+        create_mapping_template(args.form_url, output, headless=args.headless, colab=args.colab)
         print(f"Mapeamento inicial criado em: {output}")
         return
 
@@ -309,7 +320,7 @@ def main() -> None:
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=args.headless)
+        browser = _launch_browser(playwright, headless=args.headless, colab=args.colab)
         try:
             submit_rows(browser, config, rows, delay_ms=args.delay_ms)
         finally:

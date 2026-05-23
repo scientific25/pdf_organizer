@@ -109,3 +109,37 @@ ms-form-bot \
 - Use `--submit-label "Enviar"` se o botão final não for detectado automaticamente.
 - Cada linha da planilha gera **uma submissão completa** do formulário.
 - Linhas totalmente vazias são ignoradas.
+
+## Automação de Microsoft Forms no Google Colab
+
+### 1) Suba os arquivos no Colab
+Faça upload destes arquivos para a sessão:
+- `respostas_modelo_60_linhas.csv` (ou sua planilha final)
+- `form_mapping.example.json` (renomeie para `form_mapping.json` e ajuste)
+
+### 2) Instale dependências no notebook
+```python
+!pip install -q playwright openpyxl
+!playwright install chromium
+```
+
+### 3) Rode o bot em modo Colab (headless + no-sandbox)
+```python
+!python -m pdf_organizer.ms_forms_bot \
+  --form-url "https://forms.cloud.microsoft/pages/responsepage.aspx?id=..." \
+  --sheet "/content/respostas_modelo_60_linhas.csv" \
+  --mapping "/content/form_mapping.json" \
+  --limit 60 \
+  --skip-header \
+  --headless \
+  --colab
+```
+
+### 4) (Opcional) Gerar mapeamento inicial no Colab
+```python
+!python -m pdf_organizer.ms_forms_bot \
+  --form-url "https://forms.cloud.microsoft/pages/responsepage.aspx?id=..." \
+  --init-mapping "/content/form_mapping_auto.json" \
+  --headless \
+  --colab
+```

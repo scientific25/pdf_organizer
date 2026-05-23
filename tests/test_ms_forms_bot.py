@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pdf_organizer.ms_forms_bot import load_first_rows, load_mapping
+from pdf_organizer.ms_forms_bot import _launch_browser, load_first_rows, load_mapping
 
 
 def test_load_mapping_ok(tmp_path: Path):
@@ -39,3 +39,19 @@ def test_load_first_rows_skip_header(tmp_path: Path):
     rows = load_first_rows(csv_path, limit=60, expected_columns=2, skip_header=True)
 
     assert rows == [["valor1", "valor2"], ["valor3", "valor4"]]
+
+
+def test_launch_browser_colab_args():
+    class Chromium:
+        def launch(self, **kwargs):
+            self.kwargs = kwargs
+            return kwargs
+
+    class Playwright:
+        chromium = Chromium()
+
+    out = _launch_browser(Playwright(), headless=True, colab=True)
+
+    assert out["headless"] is True
+    assert "--no-sandbox" in out["args"]
+    assert "--disable-dev-shm-usage" in out["args"]
